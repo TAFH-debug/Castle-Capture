@@ -1,4 +1,4 @@
-from src.util.Sequence import Sequence
+from src.util.sequence import Sequence
 import pygame
 from src.entity.game_object import GameObject
 from src import global_vars
@@ -6,7 +6,7 @@ from src import global_vars
 
 class Camera:
     lock_obj: GameObject
-    obj_group: Sequence
+    obj_group: Sequence[GameObject]
     display: pygame.Surface
     width: int
     height: int

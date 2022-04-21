@@ -1,6 +1,5 @@
 import pygame
 from src import global_vars
-import global_vars as gv
 
 TILE_SIZE = 10
 
@@ -23,11 +22,11 @@ class Tile:
         self.rect.y = pyg_c[1]
         gv.display.blit(self.sprite, self.rect)
 
-    @property.getter
+    @property
     def x(self):
         return self._x
 
-    @property.getter
+    @property
     def y(self):
         return self._y 
 
@@ -63,11 +62,13 @@ class Tiles:
 
     @staticmethod    
     def to_global_coords(coords: tuple[int, int]):
-        return (global_vars.camera.glb_x + coords[0], global_vars.camera.glb_y + coords[1])
+        import global_vars as gv
+        return (gv.camera.glb_x + coords[0], gv.camera.glb_y + coords[1])
 
     @staticmethod    
     def to_pygame_coords(coords: tuple[int, int]):
-        return (global_vars.camera.glb_x + coords[0], global_vars.camera.glb_y + coords[1])
+        import global_vars as gv
+        return (gv.camera.glb_x + coords[0], gv.camera.glb_y + coords[1])
 
 class World:
     tiles: Tiles

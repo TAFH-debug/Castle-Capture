@@ -13,4 +13,7 @@ class Sequence(Generic[T]):
         self._cont.append(var)
 
     def pop(self, index=0):
-        self._cont.pop(index)    
+        self._cont.pop(index)
+
+    def foreach(self, func):
+      for i in _cont: func(i)

@@ -1,5 +1,5 @@
 import pygame
-from enviroment.world import Tile
+from src.enviroment.world import Tile
 from src import global_vars as gv
 from src.event import event
 import threading
