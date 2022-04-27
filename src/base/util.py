@@ -1,7 +1,7 @@
 from typing import Generic, TypeVar
 
-
 T = TypeVar("T")
+
 
 class Sequence(Generic[T]):
     _cont: list[T]
@@ -16,4 +16,5 @@ class Sequence(Generic[T]):
         self._cont.pop(index)
 
     def foreach(self, func):
-      for i in _cont: func(i)
+        for i in self._cont:
+            func(i)
