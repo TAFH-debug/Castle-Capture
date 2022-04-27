@@ -1,4 +1,5 @@
 from typing import Generic, TypeVar
+import numpy
 
 T = TypeVar("T")
 

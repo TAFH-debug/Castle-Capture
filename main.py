@@ -1,15 +1,17 @@
-import pygame
+import random
 import threading
-from src.core import event
-from src.core.entity import *
 import time
 
+from src.core import *
+
+world_size = 10
 display = pygame.display.set_mode((1200, 700))
 drawable = []
 running = True
 player = Player()
-x = 0
-y = 0
+cam_x = 0
+cam_y = 0
+tiles = Tiles(world_size)
 
 
 def init():
@@ -19,10 +21,27 @@ def init():
     klisten_thread.start()
 
 
+def get_random_tile_sprite():
+    path = "sprites/tiles/tile_%n.png"
+    n = random.randint(1, 96)
+    if n < 10:
+        n = "0" + str(n)
+    else:
+        n = str(n)
+    return path.replace("%n", n)
+
+
+def generate_map():
+    for i in range(world_size):
+        for j in range(world_size):
+            tiles.set((i, j), Tile(get_random_tile_sprite()))
+
+
 def draw():
     display.fill((0, 0, 0))
     for i in drawable:
-        i.draw(display, x, y)
+        i.draw(display, cam_x, cam_y)
+    tiles.draw(display, cam_x, cam_y)
     pygame.display.flip()
 
 
@@ -36,9 +55,44 @@ def main():
     player.unit = Unit(UnitType("sprites/ships/ship (1).png", 1), 1000, 100)
     enemy = GameObject("sprites/ships/ship (4).png", 1000, 100)
     drawable.append(player.unit)
-    #drawable.append(enemy)
-    while event.is_quit(pygame.event.get()):
+    drawable.append(enemy)
+    generate_map()
+    while is_quit(pygame.event.get()):
         draw()
+
+
+def move(self, direction: str):
+    global cam_x
+    global cam_y
+    match direction:
+        case "forward":
+            if self.unit.rot_angle < 180:
+                self.unit.rot_angle = (self.unit.rot_angle + 1) % 360
+            elif self.unit.rot_angle > 180:
+                self.unit.rot_angle = (self.unit.rot_angle - 1) % 360
+            self.unit.y += 1
+            cam_y += 1
+        case "back":
+            if self.unit.rot_angle >= 180:
+                self.unit.rot_angle = (self.unit.rot_angle + 1) % 360
+            elif self.unit.rot_angle < 180 and self.unit.rot_angle != 0:
+                self.unit.rot_angle = (self.unit.rot_angle - 1) % 360
+            self.unit.y -= 1
+            cam_y -= 1
+        case "right":
+            if 90 < self.unit.rot_angle < 270:
+                self.unit.rot_angle = (self.unit.rot_angle - 1) % 360
+            elif self.unit.rot_angle > 270 or self.unit.rot_angle < 90:
+                self.unit.rot_angle = (self.unit.rot_angle + 1) % 360
+            self.unit.x += 1
+            cam_x += 1
+        case "left":
+            if self.unit.rot_angle > 270 or self.unit.rot_angle < 90:
+                self.unit.rot_angle = (self.unit.rot_angle - 1) % 360
+            elif self.unit.rot_angle < 270:
+                self.unit.rot_angle = (self.unit.rot_angle + 1) % 360
+            self.unit.x -= 1
+            cam_x -= 1
 
 
 def listen_keys():
@@ -47,13 +101,13 @@ def listen_keys():
         if keys[pygame.K_f]:
             debug_info()
         if keys[pygame.K_w]:
-            player.move("forward")
+            move(player, "forward")
         if keys[pygame.K_a]:
-            player.move("left")
+            move(player, "left")
         if keys[pygame.K_s]:
-            player.move("back")
+            move(player, "back")
         if keys[pygame.K_d]:
-            player.move("right")
+            move(player, "right")
         time.sleep(0.01)
 
 
