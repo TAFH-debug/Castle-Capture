@@ -6,12 +6,16 @@ TILESIZE = 60
 
 class Tile(GameObject):
     sprite: pygame.Surface
+    is_water: bool
+    ttype: str
     rect: pygame.Rect
 
-    def __init__(self, sprite_file: str):
+    def __init__(self, sprite_file: str, is_water: bool):
         super().__init__(sprite_file)
         self.sprite = pygame.image.load(sprite_file).convert_alpha()
         self.rect = self.sprite.get_rect()
+        #self.ttype = ttype
+        self.is_water = is_water
         self.x = 0
         self.y = 0
 
@@ -43,8 +47,25 @@ class Tiles:
         new.y = coords[1] * TILESIZE
         self._cont[coords[1]][coords[0]] = new
 
-    def get(self, coords: tuple[int, int]):
+    def get_nearby_tiles(self, coords: tuple[int, int]) -> list[Tile]:
+        i = coords[0]
+        j = coords[1]
+        result = []
+        for di in range(-1, 2):
+            for dj in range(-1, 2):
+                if di == 0 and dj == 0:
+                    continue
+                try:
+                    result.append(self._cont[j + dj][i + di])
+                except IndexError:
+                    pass
+        return result
+
+    def get(self, coords: tuple[int, int]) -> Tile:
         if coords[0] > self.size or coords[1] > self.size:
             raise Exception("Invalid coordinates")
 
         return self._cont[coords[1]][coords[0]]
+
+    def get_cont(self):
+        return self._cont

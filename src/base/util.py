@@ -4,6 +4,13 @@ import numpy
 T = TypeVar("T")
 
 
+def tryf(func, *args):
+    try:
+        return func(*args)
+    except:
+        pass
+
+
 class Sequence(Generic[T]):
     _cont: list[T]
 

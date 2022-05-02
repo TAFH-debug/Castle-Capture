@@ -1,7 +1,8 @@
 import pygame
+from pygame.sprite import AbstractGroup
 
 
-class GameObject:
+class GameObject(pygame.sprite.Sprite):
     sprite: pygame.Surface
     sprite_updated: pygame.Surface
     rect: pygame.Rect
@@ -9,7 +10,8 @@ class GameObject:
     y: int
     rot_angle: int
 
-    def __init__(self, sprite="sprites/ohno.png", x=0, y=0):
+    def __init__(self, sprite="sprites/ohno.png", x=0, y=0, *groups: AbstractGroup):
+        super().__init__(*groups)
         self.x = x
         self.y = y
         self.rot_angle = 0
