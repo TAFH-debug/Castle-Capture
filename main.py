@@ -15,11 +15,6 @@ cam_y = 0
 tiles = Tiles(world_size)
 clock = pygame.time.Clock()
 
-can_move_up = True
-can_move_down = True
-can_move_left = True
-can_move_right = True
-
 def init():
     pygame.init()
     klisten_thread = threading.Thread(target=listen_keys)
@@ -49,36 +44,23 @@ def debug_info():
 
 
 def physics():
-    global can_move_up
-    global can_move_down
-    global can_move_left
-    global can_move_right
-
-    coords = (player.unit.x // TILESIZE, player.unit.y // TILESIZE)
-    up = base.tryf(tiles.get, (coords[0] + 1, coords[1]))
-    down = base.tryf(tiles.get, (coords[0] - 1, coords[1]))
-    left = base.tryf(tiles.get, (coords[0], coords[1] - 1))
-    right = base.tryf(tiles.get, (coords[0], coords[1] + 1))
-
-    if up and not up.is_water and pygame.sprite.collide_rect(up, player.unit):
-        can_move_up = False
-    else:
-        can_move_up = True
-
-    if down and not down.is_water and pygame.sprite.collide_rect(down, player.unit):
-        can_move_down = False
-    else:
-        can_move_down = True
-
-    if right and not right.is_water and pygame.sprite.collide_rect(right, player.unit):
-        can_move_right = False
-    else:
-        can_move_right = True
-
-    if left and not left.is_water and pygame.sprite.collide_rect(left, player.unit):
-        can_move_left = False
-    else:
-        can_move_left = True
+    global cam_y
+    global cam_x
+    pl_coords = (player.unit.x + 30, player.unit.y + 30)
+    pl_coords2 = (player.unit.x, player.unit.y)
+    coords = ((player.unit.x + 30) // TILESIZE, (player.unit.y + 30) // TILESIZE)
+    nearby = tiles.get_nearby_tiles(coords)
+    for i in nearby:
+        if i.is_water: continue
+        if gen.in_range(pl_coords, (i.x, i.y), TILESIZE) or gen.in_range(pl_coords2, (i.x, i.y), TILESIZE):
+            if player.unit.x - i.x > player.unit.y - i.y:
+                dx = player.unit.x - i.x
+                player.unit.x -= dx
+                cam_x -= dx
+            else:
+                dy = player.unit.y - i.y
+                player.unit.y -= dy
+                cam_y -= dy
 
 
 def main():
@@ -99,8 +81,6 @@ def move(self, direction: str):
     global cam_y
     match direction:
         case "forward":
-            if not can_move_up:
-                return
             if self.unit.rot_angle < 180:
                 self.unit.rot_angle = (self.unit.rot_angle + 1) % 360
             elif self.unit.rot_angle > 180:
@@ -108,8 +88,6 @@ def move(self, direction: str):
             self.unit.y += 1
             cam_y += 1
         case "back":
-            if not can_move_down:
-                return
             if self.unit.rot_angle >= 180:
                 self.unit.rot_angle = (self.unit.rot_angle + 1) % 360
             elif self.unit.rot_angle < 180 and self.unit.rot_angle != 0:
@@ -117,8 +95,6 @@ def move(self, direction: str):
             self.unit.y -= 1
             cam_y -= 1
         case "right":
-            if not can_move_right:
-                return
             if 90 < self.unit.rot_angle < 270:
                 self.unit.rot_angle = (self.unit.rot_angle - 1) % 360
             elif self.unit.rot_angle > 270 or self.unit.rot_angle < 90:
@@ -126,8 +102,6 @@ def move(self, direction: str):
             self.unit.x += 1
             cam_x += 1
         case "left":
-            if not can_move_left:
-                return
             if self.unit.rot_angle > 270 or self.unit.rot_angle < 90:
                 self.unit.rot_angle = (self.unit.rot_angle - 1) % 360
             elif self.unit.rot_angle < 270:
