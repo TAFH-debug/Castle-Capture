@@ -21,7 +21,7 @@ class Tile(GameObject):
 
 
 class Tiles:
-    _cont: list[list[Tile]]
+    _cont: list
     size: int
 
     def __init__(self, size: int):
@@ -39,7 +39,7 @@ class Tiles:
                 if j:
                     j.draw(display, dx, dy)
 
-    def set(self, coords: tuple[int, int], new: Tile):
+    def set(self, coords: tuple, new: Tile):
         if coords[0] > self.size or coords[1] > self.size:
             raise Exception("Invalid coordinates")
 
@@ -47,7 +47,7 @@ class Tiles:
         new.y = coords[1] * TILESIZE
         self._cont[coords[1]][coords[0]] = new
 
-    def get_nearby_tiles(self, coords: tuple[int, int]) -> list[Tile]:
+    def get_nearby_tiles(self, coords: tuple) -> list:
         i = coords[0]
         j = coords[1]
         result = []
@@ -61,7 +61,7 @@ class Tiles:
                     pass
         return result
 
-    def get(self, coords: tuple[int, int]) -> Tile:
+    def get(self, coords: tuple) -> Tile:
         if coords[0] > self.size or coords[1] > self.size:
             raise Exception("Invalid coordinates")
 

@@ -9,7 +9,7 @@ def bool_chance(probability: float):
 
 def generate_map(world_size: int) -> Tiles:
     tiles = Tiles(world_size)
-    island_size = random.randint(5, 10)
+    island_size = random.randint(2, 5)
     island_coords = (random.randint(world_size // 20, world_size - world_size // 20),
                      random.randint(world_size // 20, world_size - world_size // 20))
 
@@ -35,5 +35,5 @@ def generate_map(world_size: int) -> Tiles:
     return tiles
 
 
-def in_range(coord: tuple[int, int], top_left: tuple[int, int], size: int):
+def in_range(coord: tuple, top_left: tuple, size: int):
     return (top_left[0] <= coord[0] <= top_left[0] + size) and (top_left[1] <= coord[1] <= top_left[1] + size)

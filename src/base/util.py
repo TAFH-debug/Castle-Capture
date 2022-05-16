@@ -10,8 +10,12 @@ def tryf(func, *args):
         pass
 
 
+def zero(*args, **kwargs):
+    pass
+
+
 class Sequence(Generic[T]):
-    _cont: list[T]
+    _cont: list
 
     def __init__(self):
         self.cont = list()
