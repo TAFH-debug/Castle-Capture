@@ -41,8 +41,8 @@ def spawn():
         enemy = EnemyUnit(UnitType("sprites/ships/ship (3).png", 1,
                                    "sprites/ships/ship (21).png",
                                    "sprites/ships/ship (9).png"),
-                          random.randint(player.unit.x - 300, player.unit.x + 300),
-                          random.randint(player.unit.y - 300, player.unit.y + 300),
+                          random.randint(0, 1000),
+                          random.randint(900, 1000),
                           team="enemy")
         units.append(enemy)
         enemys.append(enemy)

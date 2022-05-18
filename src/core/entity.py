@@ -99,6 +99,7 @@ class Unit(Healthc):
 
     def __init__(self, _type: UnitType, x: int, y: int, health=100, team="player"):
         super().__init__(_type.sprite_file, x, y)
+        self.max_timeout = 100
         self.timeout = 0
         self.type = _type
         self.bullets = []
@@ -142,13 +143,14 @@ class Unit(Healthc):
         if not bullet:
             bullet = Bullet(self.x + width, self.y - width, sx, sy, self)
         self.bullets.append(bullet)
-        self.timeout = 100
+        self.timeout = self.max_timeout
 
 
 class CastleTile(Unit):
 
     def __init__(self, sprite, spritedst, spriteprtdst, x=0, y=0, health=300):
         super().__init__(UnitType(sprite, 0, spritedst, spriteprtdst), x, y, health)
+        self.max_timeout = 400
 
     def ai(self, targetx, targety):
         if math.sqrt((self.x - targetx) ** 2 + (self.y - targety) ** 2) > 600:
@@ -157,7 +159,7 @@ class CastleTile(Unit):
             self.timeout -= 1
             return
         width = self.sprite.get_width() // 2
-        bullet = Bullet(self.x + width, self.y - width, targetx, targety, self, 2, 300)
+        bullet = Bullet(self.x + width, self.y - width, targetx, targety, self, 2, 300, 10)
         self.shoot(targetx, targety, bullet)
 
 
