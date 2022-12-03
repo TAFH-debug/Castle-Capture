@@ -170,7 +170,6 @@ def main():
             physics()
             draw()
         elif state == "gameover":
-            print("a")
             draw_gameover()
 
 
